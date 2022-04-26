@@ -23,8 +23,18 @@ def getUsers():
    
 @router.get('/get/{id}')
 def getUserById(id: int):
+    cursor = con.cursor()
+
+    sql = "SELECT * FROM Usuario WHERE idUsuario = %s"
+
+    cursor.execute(sql, (id,))
+
+    data = cursor.fetchone()
+
     return {
-        "status": 200
+        "status": 200,
+        "message": f"{cursor.rowcount} usuário selecionado.",
+        "data":  data
     }
     
 @router.post('/insert')
@@ -46,14 +56,34 @@ def setUser(user: User) :
     }
 
     
-@router.put('/update')
-def update():
+@router.put('/update/{id}')
+def update(user: User, id: int):
+    cursor = con.cursor()
+
+    sql = "UPDATE Usuario SET nome = %s WHERE idUsuario = %s"
+    val = (user.nome, id)
+
+    cursor.execute(sql, val)
+
+    con.commit()
+    cursor.close()
+
     return {
-        "status": 200
+        "status": 200,
+        "message": f"Usuário {user.nome} com id = {id} atualizado."
     }
     
-@router.delete('/delete')
-def delete():
+@router.delete('/delete/{id}')
+def delete(id: int):
+    cursor = con.cursor()
+
+    sql = "DELETE FROM Usuario WHERE idUsuario = %s"
+
+    cursor.execute(sql, (id,))
+
+    con.commit()
+
     return {
-        "status": 200
+        "status": 200,
+        "message": f"{cursor.rowcount} usuário excluído.",
     }
