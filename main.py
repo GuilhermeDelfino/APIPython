@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from routes import UsuarioRotas, TelefoneRotas
+
 app = FastAPI()
 
 app.include_router(UsuarioRotas.router, prefix='/usuario')
