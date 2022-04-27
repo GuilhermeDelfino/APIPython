@@ -2,11 +2,11 @@ from fastapi import APIRouter
 from database.conexao import Connection
 from model.UsuarioModel import User
 
-con = Connection('aluno', 'sptech', 'Agenda').getConnection()
+con = Connection().getConnection()
 router = APIRouter()
 
 @router.get('/get')
-def getUsers():
+async def getUsers():
     cursor = con.cursor()
 
     sql = "SELECT * FROM Usuario"
@@ -22,7 +22,7 @@ def getUsers():
     }
    
 @router.get('/get/{id}')
-def getUserById(id: int):
+async def getUserById(id: int):
     cursor = con.cursor()
 
     sql = "SELECT * FROM Usuario WHERE idUsuario = %s"
@@ -38,7 +38,7 @@ def getUserById(id: int):
     }
     
 @router.post('/insert')
-def setUser(user: User) :
+async def setUser(user: User) :
     cursor = con.cursor()
     
 
@@ -57,7 +57,7 @@ def setUser(user: User) :
 
     
 @router.put('/update/{id}')
-def update(user: User, id: int):
+async def update(user: User, id: int):
     cursor = con.cursor()
 
     sql = "UPDATE Usuario SET nome = %s WHERE idUsuario = %s"
@@ -74,7 +74,7 @@ def update(user: User, id: int):
     }
     
 @router.delete('/delete/{id}')
-def delete(id: int):
+async def delete(id: int):
     cursor = con.cursor()
 
     sql = "DELETE FROM Usuario WHERE idUsuario = %s"
@@ -85,5 +85,5 @@ def delete(id: int):
 
     return {
         "status": 200,
-        "message": f"{cursor.rowcount} usuário excluído.",
+        "message": f"Usuário id = {id} excluído.",
     }

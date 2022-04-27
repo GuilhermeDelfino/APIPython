@@ -3,31 +3,31 @@ from fastapi import APIRouter
 router = APIRouter()
 
 @router.get('/get')
-def get():
+async def get():
     return {
         'status': 200
     }
     
 @router.get('/get/{id}')
-def getById(id: int):
+async def getById(id: int):
     return {
         'status': 200
     }
     
 @router.post('/insert')
-def insert():
+async def insert():
     return {
         'status': 200
     }
     
 @router.put('/update')
-def update():
+async def update():
     return {
         'status': 200
     }
     
 @router.delete('/delete')
-def delete():
+async def delete():
     return {
         'status': 200
     }
