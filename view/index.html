@@ -59,7 +59,12 @@
                     <button type="submit" class="btn btn-primary btn-lg" id="btn_cadastrar">
                         Cadastrar</button>
                 </form>
+
             </section>
+        </main>
+        <main class="container-sm d-flex justify-content-center">
+            <button type="button" class="btn btn-dark btn-lg p-3 w-50 fs-4 fw-bolder" onclick="changeScreen()">
+                Cadastrar novo número</button>
         </main>
 
 
@@ -72,6 +77,9 @@
     </script>
 
     <script>
+        function changeScreen(){
+            window.location = './agenda.html';
+        }
         (async () => {
             const req = await fetch('http://127.0.0.1:8000/usuario/get', {
                 headers: {
@@ -97,7 +105,8 @@
                                 <th scope="row">${user[0]}</td>
                                 <td>${user[1]}</td>
                                 <td>
-                                   <button class='btn btn-warning' > <i class="fa-solid fa-pen"></i> </button>
+                                   <button class='btn btn-warning' onclick='atualizarUser(${user[0]})'> <i
+                                           class="fa-solid fa-pen"></i> </button>
                                 </td>
                                 <td>
                                      <button class='btn btn-danger' onclick='excluirUser(${user[0]})'> <i
@@ -201,6 +210,48 @@
                     console.error(res);
                     alert('Houve algum erro ao excluir este usuário :C')
                 }
+            }
+        }
+
+        async function atualizarUser(id) {
+
+            let newName = prompt('Insira o novo nome do usuario');
+
+            if (newName.trim().length > 3) {
+
+                const req = await fetch(`http://127.0.0.1:8000/usuario/update/${id}`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nome: newName.trim()
+                    }),
+                    cache: 'default',
+                    method: 'PUT',
+                    mode: 'cors',
+                });
+
+                const res = await req.json();
+
+                if (res && res.status !== undefined && res.status === 200) {
+                    const alert = document.querySelector('#alert_delete');
+                    alert.innerHTML = res.message;
+                    alert.classList.toggle('d-none')
+
+                    document.querySelectorAll('button').forEach(btn => btn.disabled = 'true');
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000)
+                } else {
+                    console.error(res);
+                    alert('Houve algum erro ao atualizar este usuário :C')
+                }
+
+            } else {
+                alert('Seu nome é invalido. Tente novamente...')
+                throw ('Nome precisa ter qtde de caracteres maior que 3')
             }
         }
     </script>
